@@ -7,7 +7,7 @@
 #                    "stringr", "tidyr", "ggplot2", "RColorBrewer", "lme4", "lmerTest",
 #                    "raster", "sf", "sp", "terra", "PNWColors", "usdm", "corrplot",
 #                    "purrr", "MuMIn", "ggplot2", "car", "spdep", "lmtest", "MASS",
-#                    "Cairo", "DHARMa"))
+#                    "Cairo", "DHARMa", "pscl"))
 
 # load all libraries at once with easypackages
 library(easypackages)
@@ -15,7 +15,7 @@ libraries("easypackages", "conflicted", "dplyr", "here", "forcats", "lubridate",
           "stringr", "tidyr", "ggplot2", "RColorBrewer", "lme4", "lmerTest",
           "raster", "sf", "sp", "terra", "PNWColors", "usdm", "corrplot",
           "purrr", "MuMIn", "ggplot2", "car", "spdep", "lmtest", "MASS", 
-          "Cairo", "DHARMa")
+          "Cairo", "DHARMa", "pscl")
 conflict_prefer("select", "dplyr")
 conflict_prefer("filter", "dplyr")
 conflict_prefer("vifcor", "usdm")
@@ -737,3 +737,21 @@ tr_poisson_table$Lower_95CI = tr_poisson_table$Estimate - 1.96 * tr_poisson_tabl
 tr_poisson_table$Upper_95CI = tr_poisson_table$Estimate + 1.96 * tr_poisson_table$`Std. Error`
 write.csv(tr_poisson_table, here("Data", "Fitted_Models", "Territorial_Richness_Poisson_Model_Summary.csv"),
           row.names = TRUE)
+
+#### VARIATION EXPLAINED BY THE FINAL MODELS ####
+# load(here("Data", "Fitted_Models", "Functional_Diversity_Poisson_Model.RData"))
+# load(here("Data", "Fitted_Models", "Grazer_Abundance_Negative_Binomial_Model.RData"))
+# load(here("Data", "Fitted_Models", "Grazer_Richness_Poisson_Model.RData"))
+# load(here("Data", "Fitted_Models", "Scraper_Abundance_Negative_Binomial_Model.RData"))
+# load(here("Data", "Fitted_Models", "Scraper_Richness_Poisson_Model.RData"))
+# load(here("Data", "Fitted_Models", "Territorial_Abundance_Negative_Binomial_Model.RData"))
+# load(here("Data", "Fitted_Models", "Territorial_Richness_Poisson_Model.RData"))
+
+require(pscl)
+round(pscl::pR2(fd_poisson), digits = 2)
+round(pscl::pR2(ga_negbin), digits = 2)
+round(pscl::pR2(sa_negbin), digits = 2)
+round(pscl::pR2(ta_negbin), digits = 2)
+round(pscl::pR2(gr_poisson), digits = 2)
+round(pscl::pR2(sr_poisson), digits = 2)
+round(pscl::pR2(tr_poisson), digits = 2)
