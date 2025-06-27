@@ -22,7 +22,8 @@ here::here() # verify where we are according to the here package
 lake = pnw_palette(name = "Lake", n = 8, type = "discrete")
 bioeroder_col = lake[6]
 scraper_col = lake[5]
-browser_col = lake[2]
+# browser_col = lake[2]
+browser_col = "#7F4F24"
 grazer_col = lake[1]
 territorial_col = lake[3]
 
@@ -512,3 +513,130 @@ ggsave(combined_plot,
        units = "in",
        bg = "white",
        filename = here("Figures", "Transect_Level_Responses.png"))
+
+#### PLOT ABUNDANCE & RICHNESS AT THE MOTU LEVEL ####
+# make sure Motu labels are correct
+plotting_data_motu =  plotting_data %>%
+  mutate(
+    Motu = as.character(Motu),  # Convert from factor to character
+    Motu = case_when(
+      Motu %in% c("Tauini", "Tauini_Auroa") ~ "Tauini-Ahuroa Channel",
+      Motu == "Hiraanae_Auroa" ~ "Hīra‘a‘ānae-Ahuroa Channel",
+      Motu == "Hiraanae" ~ "Hīra‘a‘ānae", 
+      Motu == "Aie" ~ "'Ă'ie",
+      Motu == "Tiaraunu" ~ "Ti'ara'aunu",
+      Motu == "Rimatuu" ~ "Rimatu'u",
+      TRUE ~ Motu))
+
+# summarize total abundance by Motu and functional group
+abundance_motu = plotting_data_motu %>%
+  group_by(Motu) %>%
+  summarise(
+    Territorial = sum(Territorial_Abundance),
+    Scraper = sum(Scraper_Abundance),
+    Grazer = sum(Grazer_Abundance),
+    Browser = sum(Browser_Abundance),
+    Bioeroder = sum(Bioeroder_Abundance)) %>%
+  pivot_longer(cols = -Motu, names_to = "Functional_Group", values_to = "Abundance") %>%
+  group_by(Motu) %>%
+  mutate(Relative_Abundance = Abundance / sum(Abundance) * 100) %>%
+  ungroup()
+
+# summarize total richness by Motu and functional group
+richness_motu = plotting_data_motu %>%
+  group_by(Motu) %>%
+  summarise(
+    Territorial = sum(Territorial_Richness),
+    Scraper = sum(Scraper_Richness),
+    Grazer = sum(Grazer_Richness),
+    Browser = sum(Browser_Richness),
+    Bioeroder = sum(Bioeroder_Richness)) %>%
+  pivot_longer(cols = -Motu, names_to = "Functional_Group", values_to = "Richness") %>%
+  group_by(Motu) %>%
+  mutate(Relative_Richness = Richness / sum(Richness) * 100) %>%
+  ungroup()
+
+# define colors (using those previously created)
+functional_colors = c(
+  Territorial = territorial_col,
+  Scraper = scraper_col,
+  Grazer = grazer_col,
+  Browser = browser_col,
+  Bioeroder = bioeroder_col)
+
+# plot relative contributions of each functional group to absolute herbivore abundance across motu
+motu_abundance_plot = 
+  ggplot(abundance_motu, aes(x = Motu, y = Relative_Abundance, fill = Functional_Group)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = functional_colors,
+                    labels = c(
+                      Grazer = "Grazers/detritivores",
+                      Scraper = "Small excavators/scrapers",
+                      Browser = "Browsers",
+                      Bioeroder = "Large excavators/Bioeroders",
+                      Territorial = "Territorial detritus/algae feeders")) +
+  labs(
+    y = "Relative Abundance (%)",
+    x = "Motu",
+    fill = "Functional Group") +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 16, color = "black"),
+        axis.text.x = element_text(size = 14, color = "black", angle = 30, hjust = 1),
+        axis.text.y = element_text(size = 14, color = "black"),
+        axis.line = element_line(color = "black", linewidth = 0.5),
+        panel.grid = element_blank())
+motu_abundance_plot
+
+# plot relative contributions of each functional group to absolute herbivore richness across motu
+motu_richness_plot =
+  ggplot(richness_motu, aes(x = Motu, y = Relative_Richness, fill = Functional_Group)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = functional_colors,
+                    labels = c(
+                      Grazer = "Grazers/detritivores",
+                      Scraper = "Small excavators/scrapers",
+                      Browser = "Browsers",
+                      Bioeroder = "Large excavators/Bioeroders",
+                      Territorial = "Territorial detritus/algae feeders")) +
+  labs(
+    y = "Relative Richness (%)",
+    x = "Motu",
+    fill = "Functional Group") +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 16, color = "black"),
+        axis.text.x = element_text(size = 14, color = "black", angle = 30, hjust = 1),
+        axis.text.y = element_text(size = 14, color = "black"),
+        axis.line = element_line(color = "black", linewidth = 0.5),
+        panel.grid = element_blank())
+
+# remove x-axis text from top plot (abundance) and add panel A label
+motu_abundance_plot2 = motu_abundance_plot +
+  theme(axis.text.x = element_blank()) +
+  labs(tag = "A")
+
+# add panel B label
+motu_richness_plot2 = motu_richness_plot +
+  labs(tag = "B")
+
+# combine panels and place legend on top
+combined_plot = motu_abundance_plot2 / motu_richness_plot2 +
+  plot_layout(guides = "collect", heights = c(1, 1)) &
+  theme(legend.position = "top",
+        legend.direction = "horizontal",
+        legend.title = element_text(size = 12),
+        legend.text = element_text(size = 12),
+        plot.tag = element_text(face = "bold", size = 14)) &
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10))
+
+combined_plot
+
+# finally! save the plot
+ggsave(combined_plot,
+       dpi = 600,
+       width = 14,
+       height = 10,
+       units = "in",
+       bg = "white",
+       filename = here("Figures", "Motu_Level_Responses.png"))
