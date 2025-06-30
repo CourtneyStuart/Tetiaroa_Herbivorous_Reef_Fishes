@@ -26,6 +26,15 @@ setwd("E:/Data/StuartC_DPhil_Ch2/")
 here::i_am(".here")
 here::here() # verify where we are according to the here package
 
+#### COLOR PALETTES ####
+lake = pnw_palette(name = "Lake", n = 8, type = "discrete")
+bioeroder_col = lake[6]
+scraper_col = lake[5]
+# browser_col = lake[2]
+browser_col = "#7F4F24"
+grazer_col = lake[1]
+territorial_col = lake[3]
+
 #### LOAD FISH DATA ####
 load(here("Code", "01_Combine_Fish_Data.RData"))
 
@@ -434,11 +443,11 @@ fga_stacked_barplot =
   ggplot(fga_data, aes(x = Transect_ID, y = Abundance, fill = Functional_Group)) +
   geom_bar(stat = "identity", position = "stack") +
   scale_fill_manual(values = c(
-    "Browsers" = "#d3ceba", 
-    "Grazers/detritivores" = "#30c67c", 
-    "Small excavators/scrapers" = "#0061ff", 
-    "Large excavators/bioeroders" = "#c3e1fc", 
-    "Territorial algae/detritus feeders" = "#392d69")) +
+    "Browsers" = browser_col, 
+    "Grazers/detritivores" = grazer_col, 
+    "Small excavators/scrapers" = scraper_col, 
+    "Large excavators/bioeroders" = bioeroder_col, 
+    "Territorial algae/detritus feeders" = territorial_col)) +
   ylab("Functional Group Abundance") +
   xlab(NULL) +
   theme_minimal() +
@@ -470,11 +479,11 @@ fga_stacked_barplot =
    ggplot(fgr_data, aes(x = Transect_ID, y = Richness, fill = Functional_Group)) +
    geom_bar(stat = "identity", position = "stack") +
    scale_fill_manual(values = c(
-     "Browsers" = "#d3ceba", 
-     "Grazers/detritivores" = "#30c67c", 
-     "Small excavators/scrapers" = "#0061ff", 
-     "Large excavators/bioeroders" = "#c3e1fc", 
-     "Territorial algae/detritus feeders" = "#392d69")) +
+     "Browsers" = browser_col, 
+     "Grazers/detritivores" = grazer_col, 
+     "Small excavators/scrapers" = scraper_col, 
+     "Large excavators/bioeroders" = bioeroder_col, 
+     "Territorial algae/detritus feeders" = territorial_col)) +
    ylab("Functional Group Richness") +
    xlab(NULL) +
    theme_minimal() +
@@ -498,11 +507,11 @@ fga_stacked_barplot =
    ggplot(fgd_data, aes(x = Transect_ID, y = Present, fill = Functional_Group)) +
    geom_bar(stat = "identity", position = "stack") +
    scale_fill_manual(values = c(
-     "Browsers" = "#d3ceba", 
-     "Grazers/detritivores" = "#30c67c", 
-     "Small excavators/scrapers" = "#0061ff", 
-     "Large excavators/bioeroders" = "#c3e1fc", 
-     "Territorial algae/detritus feeders" = "#392d69")) +
+     "Browsers" = browser_col, 
+     "Grazers/detritivores" = grazer_col, 
+     "Small excavators/scrapers" = scraper_col, 
+     "Large excavators/bioeroders" = bioeroder_col, 
+     "Territorial algae/detritus feeders" = territorial_col)) +
    ylab("Functional Diversity") +
    xlab(NULL) +
    theme_minimal() +

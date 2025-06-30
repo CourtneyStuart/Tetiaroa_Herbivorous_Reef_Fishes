@@ -27,7 +27,8 @@ lake = pnw_palette(name = "Lake", n = 8, type = "discrete")
 bioeroder_col = lake[6]
 scraper_col = lake[5]
 # browser_col = lake[2]
-browser_col = "#7F4F24"grazer_col = lake[1]
+browser_col = "#7F4F24"
+grazer_col = lake[1]
 territorial_col = lake[3]
 
 #### DATA CLEANING AND PREP ####
@@ -449,11 +450,11 @@ summary_plot =
         legend.title = element_blank(),
         legend.text = element_text(size = 6)) + 
   scale_fill_manual(values = c(
-    "Browsers" = "#d3ceba", 
-    "Grazers/detritivores" = "#30c67c", 
-    "Small excavators/scrapers" = "#0061ff", 
-    "Large excavators/bioeroders" = "#c3e1fc", 
-    "Territorial algae/detritus feeders" = "#392d69")) +
+    "Browsers" = browser_col, 
+    "Grazers/detritivores" = grazer_col, 
+    "Small excavators/scrapers" = scraper_col, 
+    "Large excavators/bioeroders" = bioeroder_col, 
+    "Territorial algae/detritus feeders" = territorial_col)) +
   guides(fill = guide_legend(nrow = 2, byrow = FALSE))  # wrap legend into 2 rows
 
 summary_plot
