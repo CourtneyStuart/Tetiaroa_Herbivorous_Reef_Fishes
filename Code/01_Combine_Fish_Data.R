@@ -26,8 +26,8 @@ here::here() # verify where we are according to the here package
 lake = pnw_palette(name = "Lake", n = 8, type = "discrete")
 bioeroder_col = lake[6]
 scraper_col = lake[5]
-browser_col = lake[2]
-grazer_col = lake[1]
+# browser_col = lake[2]
+browser_col = "#7F4F24"grazer_col = lake[1]
 territorial_col = lake[3]
 
 #### DATA CLEANING AND PREP ####
