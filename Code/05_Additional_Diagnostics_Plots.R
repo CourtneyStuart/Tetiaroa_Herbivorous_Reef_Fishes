@@ -312,8 +312,8 @@ shared_legend
 landscape_plots = plot_grid(
   (functional_group_abundance + theme(legend.position = "none")),
   (functional_group_richness + theme(legend.position = "none")),
-  labels = c("(A) Functional Group Abundance",
-             "(B) Functional Group Richness"),
+  labels = c("(A) Functional-group-specific abundance",
+             "(B) Functional-group-specific richness"),
   nrow = 1, rel_widths = c(1, 1), align = "h")
 
 # add the shared legend below
@@ -331,8 +331,8 @@ ggsave(plot = landscape_plots,
 portrait_plots = plot_grid(
   (functional_group_abundance + theme(legend.position = "none")),
   (functional_group_richness + theme(legend.position = "none")),
-  labels = c("(A) Functional Group Abundance",
-             "(B) Functional Group Richness"),
+  labels = c("(A) Functional-group-specific abundance",
+             "(B) Functional-group-specific richness"),
   ncol = 1, rel_widths = c(1, 1), align = "v")
 
 # add the shared legend below
